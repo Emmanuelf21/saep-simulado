@@ -1,0 +1,42 @@
+.formulario{
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: auto;
+    margin-top: 20px;
+}
+
+.formulario .flex-col{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.flex-col label{
+    font-size: 20px;
+}
+
+.flex-col input{
+    padding: 4px 8px;
+    width: 200px;
+    border: none;
+    border-bottom: 2px solid gray;
+    font-size: 16px;
+}
+.flex-col select{
+    padding: 4px 8px;
+    width: 150px;
+    border: none;
+    border-bottom: 2px solid gray;
+    font-size: 16px;
+}
+.formulario .btnRegistrar{
+    padding: 8px 12px;
+    cursor: pointer;
+    background: #0044ff;
+    color: #fff;
+    border-radius: 8px;
+    border: 1px solid #888888da;
+}

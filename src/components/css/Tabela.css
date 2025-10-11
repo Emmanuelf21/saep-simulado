@@ -1,0 +1,46 @@
+.container-tabela{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.tabela{
+    width: 90%;
+    text-align: center;
+    margin: auto;
+    overflow: scroll;
+}
+
+.formularioEditar{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: fit-content;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    background: #c2c2c2;
+    padding: 12px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+}
+
+.formularioEditar .flex-col{
+    display: flex;
+    flex-direction: column;
+}
+
+.formularioEditar .btnSalvar{
+    padding: 4px 8px;
+    background: #0044ff;
+    border-radius: 8px;
+    color: #fff;
+    border: 1px solid #888888da;
+    cursor: pointer;
+}
