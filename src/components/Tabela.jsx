@@ -1,40 +1,31 @@
 import React, { useEffect, useState } from 'react'
 import './css/Tabela.css'
+import EditarTabela from './EditarTabela';
 const Tabela = () => {
     const [edit, setEdit] = useState(1);
     const [livros, setLivros] = useState();
+    const [livroEditar, setLivroEditar] = useState();
 
-    const [livro, setLivro] = useState();
-    const [autor, setAutor] = useState('')
-    const [categoria, setCategoria] = useState('')
-    const [estado, setEstado] = useState('')
-    const [aluno, setAluno] = useState('')
-    const [data, setData] = useState('')
-
-    const opcoes = [
-        { id: 1, label: 'fantasia' },
-        { id: 2, label: 'terror' },
-        { id: 3, label: 'história' }
-    ]
-
-    const opcoesStatus = [
-        { id: 1, label: 'Disponível' },
-        { id: 2, label: 'Reservado' }
-    ]
-
-    function handleEditTable(e) {
-        if (edit == 0) {
-            // puxar o livro pelo id e depois fazer o put
-            setEdit(1)
-        }
-        else {
-            setEdit(0)
-        }
+    function handleEditTable(e, livro) {
+        e.preventDefault();
+        setEdit(0);             // ativa modo edição
+        setLivroEditar(livro);  // envia livro para o form de edição
     }
 
-    // useEffect({
+    useEffect(() => {
+        const get_livros = async () => {
+               const res = await fetch('http://127.0.0.1:8000/livros/');
+              try {
+               if (!res.ok) throw new Error("Erro na requisição");
+                const data = await res.json();
+                setLivros(data);
+            } catch (error) {
+                console.error("Erro:", error);
+            }
+        }
 
-    // }, [])
+        get_livros()
+    }, [])
     return (
         <main className='container-tabela'>
             <div>
@@ -51,60 +42,33 @@ const Tabela = () => {
                         <th>Categoria</th>
                         <th>Disponibilidade</th>
                         <th>Aluno que reservou</th>
+                        <th>Editar</th>
                     </tr>
                 </thead>
                 {/* fazer um loop */}
                 <tbody>
-                    <tr>
-                        <td>nome filme</td>
-                        <td>nome autor</td>
-                        <td>categoria</td>
-                        <td>Disponibilidade</td>
-                        <td>aluno</td>
-                        <td><button key='1' onClick={(e) => handleEditTable(e)}>Editar</button></td>
-                    </tr>
+                    {livros && livros.map(livro => (
+                        <tr key={livro.id}>
+                            <td>{livro.nome_livro}</td>
+                            <td>{livro.autor}</td>
+                            <td>{livro.categoria}</td>
+                            <td>{livro.disponibilidade}</td>
+                            <td>{livro.aluno}</td>
+                            <td><button onClick={(e) => handleEditTable(e, livro)}>Editar</button></td>
+                        </tr>
+                    ))
+                    }
                 </tbody>
             </table>
             {/* } */}
-            {edit==0 &&
-                <form method='PUT' className='formularioEditar'>
-                    <div className='flex-col'>
-                        <label name="livro">Livro</label>
-                        <input id='livro' type="text" value={livro} onChange={(e) => setLivro(e.target.value)} placeholder='Digite o nome do livro...' />
-                    </div>
-                    <div className='flex-col'>
-                        <label name="autor">Autor</label>
-                        <input id='autor' type="text" value={autor} onChange={(e) => setAutor(e.target.value)} placeholder='Digite o nome do autor...' />
-                    </div>
-                    <div className='select flex-col'>
-                        <label name="categoria">Categoria</label>
-                        <select name='categoria' value={categoria} id="meuSelecionado" onChange={(e) => { setCategoria(e.target.value) }}>
-                            <option value="">--Selecione--</option>
-                            {opcoes.map((op) => {
-                                return <option value={op.label} key={op.id}>{op.label}</option>
-                            })}
-                        </select>
-                    </div>
-                    <div className='select flex-col'>
-                        <label name="status">Disponibilidade</label>
-                        <select name='status' value={estado} id="meuSelecionadoStatus" onChange={(e) => { setEstado(e.target.value) }}>
-                            <option value="">--Selecione--</option>
-                            {opcoesStatus.map((op) => {
-                                return <option value={op.label} key={op.id}>{op.label}</option>
-                            })}
-                        </select>
-                    </div>
-                    <div className='flex-col'>
-                        <label name="aluno">Aluno</label>
-                        <input id='aluno' type="text" value={aluno} onChange={(e) => setAutor(e.target.value)} placeholder='Digite o nome do aluno...' />
-                    </div>
-                    <div className='flex-col'>
-                        <label name="data">Data da devolução</label>
-                        <input id='data' type="date" value={data} onChange={(e) => setAutor(e.target.value)} placeholder='Digite o nome do data...' />
-                    </div>
-                    <button type='submit' className='btnSalvar'>Salvar</button>
-                </form>
-            }
+            {edit === 0 && livroEditar && (
+                <EditarTabela
+                edit={edit}
+                livro={livroEditar}
+                setEdit={setEdit} // ✅ passa essa função
+              />
+              
+            )}
         </main>
     )
 }

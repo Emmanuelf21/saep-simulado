@@ -1,12 +1,14 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = (
-    "mssql+pyodbc://meu_usuario:MinhaSenha123@localhost:1433/saep_db"
-    "?driver=ODBC+Driver+17+for+SQL+Server"
-)
+DATABASE_URL = "postgresql+asyncpg://postgres:senai103@localhost:5432/saep_db"
 
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_async_engine(DATABASE_URL, echo=True)
+
+SessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False
+)
 
 Base = declarative_base()
