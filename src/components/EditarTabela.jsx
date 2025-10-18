@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 
 const EditarTabela = ({ edit, livro, setEdit }) => {
-  const [nomeLivro, setNomeLivro] = useState(livro.nome_livro);
-  const [autor, setAutor] = useState(livro.autor);
-  const [categoria, setCategoria] = useState(livro.categoria);
-  const [estado, setEstado] = useState(livro.disponibilidade);
-  const [aluno, setAluno] = useState(livro.aluno);
+  const [nomeLivro, setNomeLivro] = useState(livro.nome_livro || '');
+  const [autor, setAutor] = useState(livro.autor || '');
+  const [categoria, setCategoria] = useState(livro.categoria || '');
+  const [estado, setEstado] = useState(livro.disponibilidade || '');
+  const [aluno, setAluno] = useState(livro.aluno || '');
   const [data, setData] = useState(
     livro.data ? new Date(livro.data).toISOString().split("T")[0] : ''
   );
+  
 
   const opcoes = [
     { id: 1, label: 'fantasia' },
@@ -31,14 +32,13 @@ const EditarTabela = ({ edit, livro, setEdit }) => {
           autor,
           categoria,
           disponibilidade: estado,
-          aluno,
-          data
-        })
+          aluno: aluno.trim() === '' ? null : aluno,
+          data: data === '' ? null : data
+        })        
       });
-
+  
       if (!res.ok) throw new Error("Erro ao atualizar livro");
-      const data = await res.json();
-      console.log("Livro atualizado:", data);
+      window.location.reload();
     } catch (err) {
       console.error(err);
     }

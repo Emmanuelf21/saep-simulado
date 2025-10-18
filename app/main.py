@@ -6,6 +6,7 @@ from .database import SessionLocal, engine, Base
 from .crud import get_users, create_user, create_livro, get_livros
 from .schemas import LivroUpdate
 from .models import Livros
+from .schemas import LivroCreate
 
 app = FastAPI()
 app.add_middleware(
@@ -38,10 +39,12 @@ async def add_user(name: str, email: str, senha:str, db:AsyncSession = Depends(g
 async def read_livros(db: AsyncSession = Depends(get_db)):
     return await get_livros(db)
 
+# @app.post("/livros/")
+# async def add_livro(nome_livro:str, autor: str, categoria: str, db: AsyncSession = Depends(get_db)):
+#     return await create_livro(db, nome_livro, autor, categoria)
 @app.post("/livros/")
-async def add_livro(nome_livro:str, autor: str, categoria: str, db: AsyncSession = Depends(get_db)):
-    return await create_livro(db, nome_livro, autor, categoria)
-
+async def add_livro(livro: LivroCreate, db: AsyncSession = Depends(get_db)):
+    return await create_livro(db, livro.nome_livro, livro.autor, livro.categoria)
 
 @app.put("/livros/{id}")
 async def atualizar_livro(id: int, livro: LivroUpdate, db: AsyncSession = Depends(get_db)):

@@ -44,3 +44,12 @@
     border: 1px solid #888888da;
     cursor: pointer;
 }
+
+.btnEditar{
+    padding: 8px 12px;
+    cursor: pointer;
+    background: #0044ff;
+    color: #fff;
+    border-radius: 8px;
+    border: 1px solid #888888da;
+}

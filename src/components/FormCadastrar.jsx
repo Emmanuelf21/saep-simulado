@@ -6,54 +6,83 @@ const FormCadastrar = () => {
     const [autor, setAutor] = useState('')
     const [categoria, setCategoria] = useState('')
 
-
     const opcoes = [
         { id: 1, label: 'fantasia' },
         { id: 2, label: 'terror' },
         { id: 3, label: 'história' }
     ]
-    const handleSubmit = () => {
-        const get_livros = async () => {
-            const res = await fetch('http://127.0.0.1:8000/livros/');
-            try {
-                if (!res.ok) throw new Error("Erro na requisição");
-                const data = await res.json();
-                setLivros(data);
-            } catch (error) {
-                console.error("Erro:", error);
-            }
-        }
 
-        get_livros()
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+    
+        const novoLivro = {
+            nome_livro: livro,
+            autor: autor,
+            categoria: categoria
+        }
+    
+        try {
+            const res = await fetch('http://127.0.0.1:8000/livros/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(novoLivro)
+            })
+    
+            if (!res.ok) throw new Error('Erro ao cadastrar livro')
+    
+            const data = await res.json()
+            console.log('Livro cadastrado:', data)
+    
+            // Limpar campos
+            setLivro('')
+            setAutor('')
+            setCategoria('')
+            window.location.reload();
+        } catch (error) {
+            console.error('Erro:', error)
+        }
     }
+    
     return (
-        <form method='POST' className='formulario'>
+        <form onSubmit={handleSubmit} className='formulario'>
             <div className='flex-col'>
-                <label name="livro">Livro</label>
-                <input id='livro' type="text" value={livro} onChange={(e) => setLivro(e.target.value)} placeholder='Digite o nome do livro...' />
+                <label htmlFor="livro">Livro</label>
+                <input
+                    id='livro'
+                    type="text"
+                    value={livro}
+                    onChange={(e) => setLivro(e.target.value)}
+                    placeholder='Digite o nome do livro...'
+                    required
+                />
             </div>
             <div className='flex-col'>
-                <label name="autor">Autor</label>
-                <input id='autor' type="text" value={autor} onChange={(e) => setAutor(e.target.value)} placeholder='Digite o nome do autor...' />
+                <label htmlFor="autor">Autor</label>
+                <input
+                    id='autor'
+                    type="text"
+                    value={autor}
+                    onChange={(e) => setAutor(e.target.value)}
+                    placeholder='Digite o nome do autor...'
+                    required
+                />
             </div>
             <div className='select flex-col'>
-                <label name="categoria">Categoria</label>
-                <select name='categoria' value={categoria} id="meuSelecionado" onChange={(e) => { setCategoria(e.target.value) }}>
+                <label htmlFor="categoria">Categoria</label>
+                <select
+                    id="categoria"
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                    required
+                >
                     <option value="">--Selecione--</option>
-                    {opcoes.map((op) => {
-                        return <option value={op.label} key={op.id}>{op.label}</option>
-                    })}
+                    {opcoes.map((op) => (
+                        <option value={op.label} key={op.id}>{op.label}</option>
+                    ))}
                 </select>
             </div>
-            {/* <div className='select flex-col'>
-                <label name="status">Disponibilidade</label>
-                <select name='status' value={estado} id="meuSelecionadoStatus" onChange={(e) => { setEstado(e.target.value) }}>
-                    <option value="">--Selecione--</option>
-                    {opcoesStatus.map((op) => {
-                        return <option value={op.label} key={op.id}>{op.label}</option>
-                    })}
-                </select>
-            </div> */}
             <button type='submit' className='btnRegistrar'>Registrar</button>
         </form>
     )

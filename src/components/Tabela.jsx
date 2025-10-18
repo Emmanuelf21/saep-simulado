@@ -54,7 +54,7 @@ const Tabela = () => {
                             <td>{livro.categoria}</td>
                             <td>{livro.disponibilidade}</td>
                             <td>{livro.aluno}</td>
-                            <td><button onClick={(e) => handleEditTable(e, livro)}>Editar</button></td>
+                            <td><button className='btnEditar' onClick={(e) => handleEditTable(e, livro)}>Editar</button></td>
                         </tr>
                     ))
                     }
